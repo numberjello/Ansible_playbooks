@@ -1,0 +1,83 @@
+---
+
+  - name: Chef FrontEnd install
+    hosts: all
+
+    tasks:
+     - name: rpm install
+       become: yes
+       become_user: root
+       yum:
+          name=http://mirror.nju.edu.cn/chef/yum/stable/stable-el7-x86_64/chef-server-core-13.1.13-1.el7.x86_64.rpm
+       tags: feinstall
+  
+  
+     - name: Create Chef Front End directory
+       become: yes
+       become_user: root
+       file:
+         path:  /var/opt/opscode/upgrades/
+         owner: root
+         group: root
+         mode: 0755
+         state: directory
+       tags: createdir
+
+     - name: Template a file to opscode zrh
+       template:
+         src: chef-server.rb.zrh.j2
+         dest: /etc/opscode/chef-server.rb
+       when: ansible_hostname.startswith('z')
+       become: yes
+         
+     - name: Template a file to opscode sjc
+       template:
+         src: chef-server.rb.sjc.j2
+         dest: /etc/opscode/chef-server.rb
+       when: ansible_hostname.startswith('s')
+       become: yes 
+
+     - name: Template a file to opscode iad
+       template:
+         src: chef-server.rb.iad.j2
+         dest: /etc/opscode/chef-server.rb
+       when: ansible_hostname.startswith('i')      
+       become: yes  
+       
+     - name: Copy key file
+       become: yes
+       become_user: root
+       ansible.builtin.copy: 
+         src: private-chef-secrets.json
+         dest: /etc/opscode/private-chef-secrets.json
+         owner: root
+         group: root
+         mode: 0600
+         
+     - name: Template a file to opscode
+       become: yes
+       template:
+         src: migration-level
+         dest: /var/opt/opscode/upgrades/migration-level
+
+     - name: Touch bootstrap
+       become: yes
+       become_user: root
+       command: touch /var/opt/opscode/bootstrapped
+
+     - name: rpm install chef-managed
+       become: yes
+       become_user: root
+       yum:
+          name=http://mirror.nju.edu.cn/chef/yum/stable/stable-el7-x86_64/chef-manage-2.5.16-1.el7.x86_64.rpm
+       tags: chefMinstall
+       
+     - name: chef server restart
+       become: yes
+       become_user: root
+       command: echo y | chef-server-ctl reconfigure
+       
+     - name: chef managed restart
+       become: yes
+       become_user: root
+       command: chef-manage-ctl reconfigure
