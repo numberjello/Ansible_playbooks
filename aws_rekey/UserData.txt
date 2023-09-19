@@ -1,0 +1,8 @@
+#cloud-config
+
+cloud_final_modules:
+- [users-groups,always]
+users:
+ - name: ec2-user
+   ssh-authorized-keys:
+    - ssh-rsa XXXXXXAQABAAABgQDXZ70wsm1e/9l1ItpH4Gf5ihZRJo0QFhwwFLhKKBA7UflxR5aMXLqC9StJM84qShwwgvLvi7l7TUeL6G+MuSRQgKdTxkmz9C3dc5wX7c5jd0wXOhfFr9VdXXXXXXXXXXXXXX8s2k2iBiTUatuAmkG60E3lWn7XhXh5cShovR5ROKkZnNIJzqpLrVED19pYICZs4rVjdBRkhBHI3ZzkHAjLlKwZxvtOr5VlLyL/uVqFTezXmTvRbpXXXXXXXXX            

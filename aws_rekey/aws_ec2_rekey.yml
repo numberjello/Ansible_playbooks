@@ -1,0 +1,49 @@
+---
+  - name: Stop an EC2 instance. Add user-data to add user and key.
+    hosts: local
+    connection: local
+    gather_facts: False
+    vars:
+      instance_id: "{{ cli_iid }}"
+      profile: "{{ cli_profile }}"
+
+    tasks:
+      - name: Render local file from template
+        template:
+          src: UserData.txt.j2
+          dest: ./UserData.txt
+        delegate_to: localhost
+
+      - name: Base64 encode UserData file
+        command: "base64 -i UserData.txt -o UserData.base64.txt"
+        delegate_to: localhost
+
+      - name: assume role
+        sts_assume_role:
+          role_arn: "arn:aws:iam::{{ account }}:role/{{ iam_role }}"
+          role_session_name: "AnsibleRoleSession"
+          region: "us-east-1"
+        register: assumed_role
+
+      - name: stop ec2 instance
+        ec2_instance:
+          state: stopped
+          aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+          aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+          security_token: "{{ assumed_role.sts_creds.session_token }}"
+          region: "us-east-1"
+          instance_ids:
+          - "{{ instance_id }}"
+
+      - name: add or modify user-data
+        command: "aws ec2 modify-instance-attribute --instance-id {{ instance_id }} --attribute userData --value file://UserData.base64.txt --region {{ region }} --profile {{ profile }}"
+
+      - name: start ec2 instance
+        ec2_instance:
+          state: started
+          aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+          aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+          security_token: "{{ assumed_role.sts_creds.session_token }}"
+          region: "us-east-1"
+          instance_ids:
+          - "{{ instance_id }}"
