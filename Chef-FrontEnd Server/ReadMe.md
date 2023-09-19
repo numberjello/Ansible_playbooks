@@ -6,7 +6,7 @@
 You must have Python Library Ansible tool installed (brew install ansible and brew install python).
 
 Wiki for these Playbooks for Chef Back-End and Front-End Servers
-[https://wiki.mediamath.com/wiki/pages/viewpage.action?pageId=396101086](https://wiki.mediamath.com/wiki/pages/viewpage.action?pageId=396101086)
+
 
 **Variables**
 
