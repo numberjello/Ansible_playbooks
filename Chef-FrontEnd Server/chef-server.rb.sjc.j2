@@ -4,7 +4,7 @@
 fqdn "{{ansible_host}}"
 
 use_chef_backend true
-chef_backend_members ["10.128.2.26", "10.128.2.25", "10.128.2.24"]
+chef_backend_members ["XXXx", "XXXx", "XXXX"]
 
 haproxy['remote_postgresql_port'] = 5432
 haproxy['remote_elasticsearch_port'] = 9200
@@ -15,7 +15,7 @@ haproxy['remote_elasticsearch_port'] = 9200
 postgresql['external'] = true
 postgresql['vip'] = '127.0.0.1'
 postgresql['db_superuser'] = 'chef_pgsql'
-postgresql['db_superuser_password'] = '2b409703026d8277f9099b43f055e6d1063fd3ec22f86b755fcb08cf0c4f768db0511c4ddbe01214567085013e0c4a8c213f'
+postgresql['db_superuser_password'] = 'XXXXXXXXX01214567085013e0c4a8c213f'
 
 # These settings ensure that we use remote elasticsearch
 # instead of local solr for search.  This also
@@ -53,7 +53,7 @@ opscode_erchef['s3_url_expiry_window_size'] = '50%'
 
 ldap['base_dn'] = 'cn=users,cn=accounts,dc=mmracks,dc=internal'
 ldap['bind_dn'] = 'uid=sudo,cn=sysaccounts,cn=etc,dc=mmracks,dc=internal'
-ldap['bind_password'] = '6jxog0vgRNET'
+ldap['bind_password'] = 'xxXx'
 ldap['host'] = 'ipa-x2.pao.mmracks.internal'
 ldap['login_attribute'] = 'uid'
 ldap['port'] = '389'
@@ -67,6 +67,6 @@ estatsd['port'] = '57475'
 
 # folsom
 folsom_graphite['enabled'] = true
-folsom_graphite['host'] = 'sjc-stats-x1.sjc.mmracks.internal'
+folsom_graphite['host'] = 'STATS SERVER XXXX'
 folsom_graphite['port'] = 2013
-folsom_graphite['prefix']='techops'
+folsom_graphite['prefix']='LABEL XXXX'
