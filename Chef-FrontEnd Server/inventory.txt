@@ -1,1 +1,1 @@
-zrh-cheffe-x1.zrh.mmracks.internal:722
+host-cheffe-x1.DOMAIN:722
